@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
     <head>
-        <title>未命名</title>
+        <title>test2</title>
         <meta charset='utf-8'/>
         <style>
   /*蓝色托帕石，适合Obsidian v0.14.5。uid [20220403] flying fly flies制作，欢迎使用及分享，借鉴（copy）了许多主题，在此一一感谢。如果喜欢，可以在Github里给我星星 https://github.com/whyt-byte */
@@ -21443,14 +21443,149 @@ body.plugin-sliding-panes-rotate-header.plugin-sliding-select-orientation-uprigh
 </style>
     </head>
     <body>
-<p>-<a data-href="test1" href="C:\Users\a9600\OneDrive\桌面\javascript\BDSE_javascript\test1.html" class="internal-link" target="_blank" rel="noopener">test1</a> </p>
-<ol>
-<li>
-<p><a data-href="test2" href="C:\Users\a9600\OneDrive\桌面\javascript\BDSE_javascript\test2.html" class="internal-link" target="_blank" rel="noopener">test2</a></p>
-<ol start="2">
-<li>123432p</li>
-</ol>
-</li>
-</ol>
+<p><a data-href="test1" href="C:\Users\a9600\OneDrive\桌面\javascript\BDSE_javascript\test1.html" class="internal-link" target="_blank" rel="noopener">test1</a></p>
+<h2 data-heading="test2">test2</h2>
+<pre class="language-javascript" tabindex="0"><code class="language-javascript is-loaded"><span class="token keyword">let</span> mapArray<span class="token punctuation">,</span> ctx<span class="token punctuation">,</span> currentImgMain<span class="token punctuation">;</span>
+<span class="token keyword">let</span> imgMountain<span class="token punctuation">,</span> imgMain<span class="token punctuation">,</span> imgEnemy<span class="token punctuation">;</span>
+<span class="token comment">//mapArray - 決定地圖中每個格子的元素</span>
+<span class="token comment">//ctx - HTML5 Canvas用</span>
+<span class="token comment">//currentImgMainX, currentImgMainY - 決定主角所在座標</span>
+<span class="token comment">//imgMountain, imgMain, imgEnemy - 障礙物, 主角, 敵人的圖片物件</span>
+<span class="token keyword">const</span> gridLength <span class="token operator">=</span> <span class="token number">200</span><span class="token punctuation">;</span>
+<span class="token comment">//網頁載入完成後初始化動作</span>
+<span class="token function">$</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//處理使用者按下按鍵,有人按下鍵盤,執行docum</span>
+<span class="token function">$</span><span class="token punctuation">(</span><span class="token dom variable">document</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">on</span><span class="token punctuation">(</span><span class="token string">"keydown"</span><span class="token punctuation">,</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//二維陣列表示方式,jaquery_canvas元件要取第0個,才取得到</span>
+<span class="token function">$</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    mapArray <span class="token operator">=</span> <span class="token punctuation">[</span> <span class="token comment">//0-可走,1-障礙,2-終點,3-敵人</span>
+    <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">]</span>
+    <span class="token punctuation">]</span><span class="token punctuation">;</span>
+    ctx <span class="token operator">=</span> <span class="token function">$</span><span class="token punctuation">(</span><span class="token string">"#myCanvas"</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token method function property-access">getContext</span><span class="token punctuation">(</span><span class="token string">"2d"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    imgMain <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Image</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    imgMain<span class="token punctuation">.</span><span class="token property-access">src</span> <span class="token operator">=</span> <span class="token string">"images/spriteSheet.png"</span><span class="token punctuation">;</span>
+    currentImgMain <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token string-property property">"x"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span>
+    <span class="token string-property property">"y"</span><span class="token operator">:</span><span class="token number">0</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+	
+	<span class="token comment">//主要繪製畫面上,怕圖片物件還沒載入完成,imgMain.onload =在避免上述說的情況</span>
+    imgMain<span class="token punctuation">.</span><span class="token method-variable function-variable method function property-access">onload</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+	<span class="token comment">//做圖片截圖,從o,o 出發,寬80,長130,丟到九宮格利調成200的比例</span>
+		
+    ctx<span class="token punctuation">.</span><span class="token method function property-access">drawImage</span><span class="token punctuation">(</span>imgMain<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">80</span><span class="token punctuation">,</span><span class="token number">130</span><span class="token punctuation">,</span>currentImgMain<span class="token punctuation">.</span><span class="token property-access">x</span><span class="token punctuation">,</span>currentImgMain<span class="token punctuation">.</span><span class="token property-access">y</span><span class="token punctuation">,</span>gridLength<span class="token punctuation">,</span>gridLength<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    imgMountain <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Image</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+imgMountain<span class="token punctuation">.</span><span class="token property-access">src</span> <span class="token operator">=</span> <span class="token string">"images/material.png"</span><span class="token punctuation">;</span>
+imgEnemy <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Image</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+imgEnemy<span class="token punctuation">.</span><span class="token property-access">src</span> <span class="token operator">=</span> <span class="token string">"images/Enemy.png"</span><span class="token punctuation">;</span>
+	<span class="token comment">//包兩層確保,敵人,山的圖片都先出現</span>
+imgMountain<span class="token punctuation">.</span><span class="token method-variable function-variable method function property-access">onload</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+imgEnemy<span class="token punctuation">.</span><span class="token method-variable function-variable method function property-access">onload</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+	<span class="token comment">//尋訪對象mapArray個元素</span>
+	<span class="token comment">//用for..in尋訪array ,一維列裡面又有陣列=二維</span>
+	
+<span class="token keyword control-flow">for</span><span class="token punctuation">(</span><span class="token keyword">var</span> x <span class="token keyword">in</span> mapArray<span class="token punctuation">)</span><span class="token punctuation">{</span>
+<span class="token keyword control-flow">for</span><span class="token punctuation">(</span><span class="token keyword">var</span> y <span class="token keyword">in</span> mapArray<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+	<span class="token comment">//畫障礙路</span>
+<span class="token keyword control-flow">if</span><span class="token punctuation">(</span>mapArray<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">[</span>y<span class="token punctuation">]</span><span class="token operator">==</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+ctx<span class="token punctuation">.</span><span class="token method function property-access">drawImage</span><span class="token punctuation">(</span>imgMountain<span class="token punctuation">,</span> <span class="token number">32</span><span class="token punctuation">,</span><span class="token number">65</span><span class="token punctuation">,</span><span class="token number">32</span><span class="token punctuation">,</span><span class="token number">32</span><span class="token punctuation">,</span>y<span class="token operator">*</span>gridLength<span class="token punctuation">,</span>x<span class="token operator">*</span>gridLength<span class="token punctuation">,</span>gridLength<span class="token punctuation">,</span>gridLength<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//座標跟陣列產生關聯,用二微陣列放山,敵人,</span>
+	<span class="token comment">//畫敵人</span>
+<span class="token punctuation">}</span><span class="token keyword control-flow">else</span> <span class="token keyword control-flow">if</span><span class="token punctuation">(</span>mapArray<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">[</span>y<span class="token punctuation">]</span><span class="token operator">==</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+ctx<span class="token punctuation">.</span><span class="token method function property-access">drawImage</span><span class="token punctuation">(</span>imgEnemy<span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span><span class="token number">40</span><span class="token punctuation">,</span><span class="token number">104</span><span class="token punctuation">,</span><span class="token number">135</span><span class="token punctuation">,</span>y<span class="token operator">*</span>gridLength<span class="token punctuation">,</span>x<span class="token operator">*</span>gridLength<span class="token punctuation">,</span>gridLength<span class="token punctuation">,</span>gridLength<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+
+<span class="token comment">//處理使用者按下按鍵</span>
+<span class="token comment">//1.判斷使用者按了甚麼? 2. 目標位置是哪一格,是否可以移動過去3. 控制主角,即便不讓她過,也要修改使用者為轉頭圖片告訴他你按的是有反應的</span>
+<span class="token function">$</span><span class="token punctuation">(</span><span class="token dom variable">document</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">on</span><span class="token punctuation">(</span><span class="token string">"keydown"</span><span class="token punctuation">,</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+	<span class="token comment">//debugger;</span>
+    <span class="token keyword">let</span> targetImg<span class="token punctuation">,</span> targetBlock<span class="token punctuation">,</span> cutImagePositionX<span class="token punctuation">;</span>
+    <span class="token comment">//cutImagePositionX - 決定主角臉朝向哪個方向</span>
+    targetImg <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token comment">//主角的目標座標canvas</span>
+    <span class="token string-property property">"x"</span><span class="token operator">:</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span>
+    <span class="token string-property property">"y"</span><span class="token operator">:</span><span class="token operator">-</span><span class="token number">1</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    targetBlock <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token comment">//主角的目標(對應2維陣列maparry)</span>
+    <span class="token string-property property">"x"</span><span class="token operator">:</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span>
+    <span class="token string-property property">"y"</span><span class="token operator">:</span><span class="token operator">-</span><span class="token number">1</span>
+    <span class="token punctuation">}</span>
+    event<span class="token punctuation">.</span><span class="token method function property-access">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//避免鍵盤預設行為發生，如捲動/放大/換頁...</span>
+    <span class="token comment">//判斷使用者按下什麼並推算目標座標</span>
+	<span class="token comment">//下列為案件發生時的事件</span>
+    <span class="token keyword control-flow">switch</span><span class="token punctuation">(</span>event<span class="token punctuation">.</span><span class="token property-access">code</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">case</span> <span class="token string">"ArrowLeft"</span><span class="token operator">:</span>
+        targetImg<span class="token punctuation">.</span><span class="token property-access">x</span> <span class="token operator">=</span> currentImgMain<span class="token punctuation">.</span><span class="token property-access">x</span> <span class="token operator">-</span> gridLength<span class="token punctuation">;</span>
+        targetImg<span class="token punctuation">.</span><span class="token property-access">y</span> <span class="token operator">=</span> currentImgMain<span class="token punctuation">.</span><span class="token property-access">y</span><span class="token punctuation">;</span><span class="token comment">//y不動</span>
+        cutImagePositionX <span class="token operator">=</span> <span class="token number">175</span><span class="token punctuation">;</span><span class="token comment">//臉朝左,因寬高都差不多,所以只輸入x截圖移動的點</span>
+		<span class="token keyword control-flow">break</span><span class="token punctuation">;</span><span class="token comment">//判斷到就離開</span>
+        <span class="token keyword">case</span> <span class="token string">"ArrowUp"</span><span class="token operator">:</span>
+        targetImg<span class="token punctuation">.</span><span class="token property-access">x</span> <span class="token operator">=</span> currentImgMain<span class="token punctuation">.</span><span class="token property-access">x</span><span class="token punctuation">;</span><span class="token comment">//往上的圖x不變</span>
+        targetImg<span class="token punctuation">.</span><span class="token property-access">y</span> <span class="token operator">=</span> currentImgMain<span class="token punctuation">.</span><span class="token property-access">y</span> <span class="token operator">-</span> gridLength<span class="token punctuation">;</span>
+        cutImagePositionX <span class="token operator">=</span> <span class="token number">355</span><span class="token punctuation">;</span><span class="token comment">//臉朝上,即將要移動的位置</span>
+        <span class="token keyword control-flow">break</span><span class="token punctuation">;</span>
+        <span class="token keyword">case</span> <span class="token string">"ArrowRight"</span><span class="token operator">:</span>
+        targetImg<span class="token punctuation">.</span><span class="token property-access">x</span> <span class="token operator">=</span> currentImgMain<span class="token punctuation">.</span><span class="token property-access">x</span> <span class="token operator">+</span> gridLength<span class="token punctuation">;</span>
+        targetImg<span class="token punctuation">.</span><span class="token property-access">y</span> <span class="token operator">=</span> currentImgMain<span class="token punctuation">.</span><span class="token property-access">y</span><span class="token punctuation">;</span>
+        cutImagePositionX <span class="token operator">=</span> <span class="token number">540</span><span class="token punctuation">;</span><span class="token comment">//臉朝右</span>
+        <span class="token keyword control-flow">break</span><span class="token punctuation">;</span>
+        <span class="token keyword">case</span> <span class="token string">"ArrowDown"</span><span class="token operator">:</span>
+        targetImg<span class="token punctuation">.</span><span class="token property-access">x</span> <span class="token operator">=</span> currentImgMain<span class="token punctuation">.</span><span class="token property-access">x</span><span class="token punctuation">;</span>
+        targetImg<span class="token punctuation">.</span><span class="token property-access">y</span> <span class="token operator">=</span> currentImgMain<span class="token punctuation">.</span><span class="token property-access">y</span> <span class="token operator">+</span> gridLength<span class="token punctuation">;</span>
+        cutImagePositionX <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span><span class="token comment">//臉朝下</span>
+        <span class="token keyword control-flow">break</span><span class="token punctuation">;</span>
+        <span class="token keyword module">default</span><span class="token operator">:</span><span class="token operator">/</span><span class="token operator">/</span>使用者按其他鍵盤不理他
+        <span class="token keyword control-flow">return</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">//確認目標位置不會超過地圖</span>
+<span class="token keyword control-flow">if</span><span class="token punctuation">(</span>targetImg<span class="token punctuation">.</span><span class="token property-access">x</span><span class="token operator">&lt;=</span><span class="token number">400</span> <span class="token operator">&amp;&amp;</span> targetImg<span class="token punctuation">.</span><span class="token property-access">x</span><span class="token operator">&gt;=</span><span class="token number">0</span> <span class="token operator">&amp;&amp;</span> targetImg<span class="token punctuation">.</span><span class="token property-access">y</span><span class="token operator">&lt;=</span><span class="token number">400</span> <span class="token operator">&amp;&amp;</span> targetImg<span class="token punctuation">.</span><span class="token property-access">y</span><span class="token operator">&gt;=</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    targetBlock<span class="token punctuation">.</span><span class="token property-access">x</span> <span class="token operator">=</span> targetImg<span class="token punctuation">.</span><span class="token property-access">y</span> <span class="token operator">/</span> gridLength<span class="token punctuation">;</span>
+    targetBlock<span class="token punctuation">.</span><span class="token property-access">y</span> <span class="token operator">=</span> targetImg<span class="token punctuation">.</span><span class="token property-access">x</span> <span class="token operator">/</span> gridLength<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token keyword control-flow">else</span><span class="token punctuation">{</span><span class="token comment">//九宮格以外要去的地方,設定為-1讓他拿不到值</span>
+    targetBlock<span class="token punctuation">.</span><span class="token property-access">x</span> <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+    targetBlock<span class="token punctuation">.</span><span class="token property-access">y</span> <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">//清空主角原本所在的位置,因為圖片人物的角度要更換,改為向右看之類的情況</span>
+    ctx<span class="token punctuation">.</span><span class="token method function property-access">clearRect</span><span class="token punctuation">(</span>currentImgMain<span class="token punctuation">.</span><span class="token property-access">x</span><span class="token punctuation">,</span> currentImgMain<span class="token punctuation">.</span><span class="token property-access">y</span><span class="token punctuation">,</span> gridLength<span class="token punctuation">,</span> gridLength<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword control-flow">if</span><span class="token punctuation">(</span>targetBlock<span class="token punctuation">.</span><span class="token property-access">x</span><span class="token operator">!=</span><span class="token operator">-</span><span class="token number">1</span> <span class="token operator">&amp;&amp;</span> targetBlock<span class="token punctuation">.</span><span class="token property-access">y</span><span class="token operator">!=</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword control-flow">switch</span><span class="token punctuation">(</span>mapArray<span class="token punctuation">[</span>targetBlock<span class="token punctuation">.</span><span class="token property-access">x</span><span class="token punctuation">]</span><span class="token punctuation">[</span>targetBlock<span class="token punctuation">.</span><span class="token property-access">y</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">case</span> <span class="token number">0</span><span class="token operator">:</span> <span class="token comment">// 一般道路(可移動)</span>
+        <span class="token function">$</span><span class="token punctuation">(</span><span class="token string">"#talkBox"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">text</span><span class="token punctuation">(</span><span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        currentImgMain<span class="token punctuation">.</span><span class="token property-access">x</span> <span class="token operator">=</span> targetImg<span class="token punctuation">.</span><span class="token property-access">x</span><span class="token punctuation">;</span><span class="token comment">//判斷好的座標,讀給主角</span>
+        currentImgMain<span class="token punctuation">.</span><span class="token property-access">y</span> <span class="token operator">=</span> targetImg<span class="token punctuation">.</span><span class="token property-access">y</span><span class="token punctuation">;</span><span class="token comment">//主角刷新位置的地方</span>
+        <span class="token keyword control-flow">break</span><span class="token punctuation">;</span>
+        <span class="token keyword">case</span> <span class="token number">1</span><span class="token operator">:</span> <span class="token comment">// 有障礙物(不可移動)</span>
+        <span class="token function">$</span><span class="token punctuation">(</span><span class="token string">"#talkBox"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">text</span><span class="token punctuation">(</span><span class="token string">"有山"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword control-flow">break</span><span class="token punctuation">;</span>
+        <span class="token keyword">case</span> <span class="token number">2</span><span class="token operator">:</span> <span class="token comment">// 終點(可移動)</span>
+        <span class="token function">$</span><span class="token punctuation">(</span><span class="token string">"#talkBox"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">text</span><span class="token punctuation">(</span><span class="token string">"抵達終點"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        currentImgMain<span class="token punctuation">.</span><span class="token property-access">x</span> <span class="token operator">=</span> targetImg<span class="token punctuation">.</span><span class="token property-access">x</span><span class="token punctuation">;</span>
+        currentImgMain<span class="token punctuation">.</span><span class="token property-access">y</span> <span class="token operator">=</span> targetImg<span class="token punctuation">.</span><span class="token property-access">y</span><span class="token punctuation">;</span>
+        <span class="token keyword control-flow">break</span><span class="token punctuation">;</span>
+	    <span class="token keyword">case</span> <span class="token number">3</span><span class="token operator">:</span> <span class="token comment">// 敵人(不可移動)</span>
+        <span class="token function">$</span><span class="token punctuation">(</span><span class="token string">"#talkBox"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">text</span><span class="token punctuation">(</span><span class="token string">"哈摟"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword control-flow">break</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token keyword control-flow">else</span><span class="token punctuation">{</span>
+        <span class="token function">$</span><span class="token punctuation">(</span><span class="token string">"#talkBox"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">text</span><span class="token punctuation">(</span><span class="token string">"邊界"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+	
+        <span class="token comment">//重新繪製主角</span>
+        ctx<span class="token punctuation">.</span><span class="token method function property-access">drawImage</span><span class="token punctuation">(</span>imgMain<span class="token punctuation">,</span> cutImagePositionX<span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">80</span><span class="token punctuation">,</span><span class="token number">130</span><span class="token punctuation">,</span>currentImgMain<span class="token punctuation">.</span><span class="token property-access">x</span><span class="token punctuation">,</span>currentImgMain<span class="token punctuation">.</span><span class="token property-access">y</span><span class="token punctuation">,</span>gridLength<span class="token punctuation">,</span>gridLength<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+</code><button class="copy-code-button">複製</button></pre>
+<hr>
     </body>
 </html>
